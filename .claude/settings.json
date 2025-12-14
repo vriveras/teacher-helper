@@ -1,0 +1,25 @@
+{
+  "$schema": "https://claude.ai/claude-code/settings-schema.json",
+  "agents": {
+    "pm": {
+      "name": "PM Agent",
+      "description": "Product Manager agent for requirements gathering, planning, user stories, and task prioritization. Use for planning features, creating sprints, and managing the product backlog.",
+      "tools": ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "Task", "TodoWrite"]
+    },
+    "dev": {
+      "name": "Dev Agent",
+      "description": "Developer agent for code implementation, technical design, code review, and bug fixing. Use for implementing features, fixing bugs, and technical architecture.",
+      "tools": ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "Task", "TodoWrite"]
+    },
+    "qa": {
+      "name": "QA Agent",
+      "description": "Quality Assurance agent for test planning, test execution, bug reporting, and verification. Use for testing implementations, verifying fixes, and ensuring quality.",
+      "tools": ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "Task", "TodoWrite"]
+    },
+    "orchestrator": {
+      "name": "Orchestrator Agent",
+      "description": "Coordination agent that manages workflows between PM, Dev, and QA agents. Use for complex multi-step tasks that require coordination across roles.",
+      "tools": ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "Task", "TodoWrite"]
+    }
+  }
+}
