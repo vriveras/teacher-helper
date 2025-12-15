@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: teacher-helper-db
+    environment:
+      POSTGRES_DB: teacher_helper
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U dev -d teacher_helper']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5
+    container_name: teacher-helper-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/devpassword
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
+      NEO4J_dbms_memory_pagecache_size: 512M
+      NEO4J_dbms_memory_heap_initial__size: 512M
+      NEO4J_dbms_memory_heap_max__size: 1G
+    ports:
+      - '7474:7474' # Browser
+      - '7687:7687' # Bolt
+    volumes:
+      - neo4jdata:/data
+      - neo4jlogs:/logs
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:7474']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: teacher-helper-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: teacher-helper-api
+    ports:
+      - '3001:3001'
+    depends_on:
+      db:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://dev:dev@db:5432/teacher_helper
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: devpassword
+      REDIS_URL: redis://redis:6379
+      API_PORT: 3001
+    volumes:
+      - ./packages/api/src:/app/packages/api/src:ro
+      - ./packages/shared/src:/app/packages/shared/src:ro
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: teacher-helper-web
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    volumes:
+      - ./packages/web/src:/app/packages/web/src:ro
+      - ./packages/shared/src:/app/packages/shared/src:ro
+
+volumes:
+  pgdata:
+  neo4jdata:
+  neo4jlogs:
+  redisdata:
