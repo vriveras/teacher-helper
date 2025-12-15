@@ -7,13 +7,13 @@
 | # | Task | Agent | Dependencies | Status |
 |---|------|-------|--------------|--------|
 | 1 | Initialize Node.js/TypeScript project with package.json, tsconfig | dev-agent | none | **DONE** |
-| 2 | Set up project structure (src/, tests/, configs) | dev-agent | 1 | pending |
-| 3 | Configure OpenRouter client for AI gateway | dev-agent | 1 | pending |
+| 2 | Set up project structure (src/, tests/, configs) | dev-agent | 1 | **DONE** |
+| 3 | Configure OpenRouter client for AI gateway | dev-agent | 1 | **DONE** |
 
 ### Epic: KB-Ingestion (Book Upload → Chunk → Index)
 | # | Task | Agent | Dependencies | Status |
 |---|------|-------|--------------|--------|
-| 4 | Define Book and Chunk data models/schemas | dev-agent | 2 | pending |
+| 4 | Define Book and Chunk data models/schemas | dev-agent | 2 | **DONE** |
 | 5 | Implement PDF parser for text extraction | dev-agent | 4 | pending |
 | 6 | Implement structure-aware chunking (300-800 tokens) | dev-agent | 5 | pending |
 | 7 | Create chunk store with metadata (book_id, chapter, section, page) | dev-agent | 6 | pending |
