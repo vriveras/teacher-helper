@@ -1,165 +1,65 @@
-// TeacherHelper Shared Types
+// TeacherHelper Shared Package
 
-// Book KB Types
-export interface Book {
-  id: string;
-  title: string;
-  edition?: string;
-  subject: string;
-  gradeBand: string;
-  language: string;
-  licensePolicy: LicensePolicy;
-  toc: TableOfContentsEntry[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Types
+export type { Book, TableOfContentsEntry, LicensePolicy, Chunk } from './types/book.types.js';
 
-export interface TableOfContentsEntry {
-  id: string;
-  title: string;
-  level: number;
-  pageStart?: number;
-  pageEnd?: number;
-  children?: TableOfContentsEntry[];
-}
+export type {
+  Quiz,
+  QuizItem,
+  Choice,
+  Blueprint,
+  CoverageEntry,
+  Citation,
+  ItemType,
+  Difficulty,
+  BloomLevel,
+  ArtifactStatus,
+} from './types/quiz.types.js';
 
-export interface LicensePolicy {
-  maxExcerptLength: number;
-  allowWatermark: boolean;
-  usageLogging: boolean;
-}
+export type {
+  VerificationReport,
+  VerificationIssue,
+  QAReport,
+  QAScores,
+  QAIssue,
+} from './types/agent.types.js';
 
-export interface Chunk {
-  id: string;
-  bookId: string;
-  chapter?: string;
-  section?: string;
-  pageStart?: number;
-  pageEnd?: number;
-  text: string;
-  embedding?: number[];
-  hash: string;
-  createdAt: Date;
-}
+export type { ApiResponse, ApiError, DeepPartial } from './types/api.types.js';
 
-// Artifact Types
-export interface Quiz {
-  id: string;
-  projectId: string;
-  title: string;
-  items: QuizItem[];
-  blueprint: Blueprint;
-  citations: Citation[];
-  status: ArtifactStatus;
-  version: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Schemas
+export {
+  bookSchema,
+  chunkSchema,
+  licensePolicySchema,
+  tocEntrySchema,
+} from './schemas/book.schema.js';
 
-export interface QuizItem {
-  id: string;
-  type: ItemType;
-  stem: string;
-  choices?: Choice[];
-  correctAnswer: string;
-  rationale: string;
-  rubric?: string;
-  citations: Citation[];
-  difficulty: Difficulty;
-  bloomLevel: BloomLevel;
-  tags: string[];
-}
+export type { BookInput, ChunkInput } from './schemas/book.schema.js';
 
-export interface Choice {
-  id: string;
-  text: string;
-  isCorrect: boolean;
-}
+export {
+  quizSchema,
+  quizItemSchema,
+  blueprintSchema,
+  citationSchema,
+  choiceSchema,
+  itemTypeSchema,
+  difficultySchema,
+  bloomLevelSchema,
+  artifactStatusSchema,
+} from './schemas/quiz.schema.js';
 
-export interface Blueprint {
-  totalItems: number;
-  itemsByType: Record<ItemType, number>;
-  itemsByDifficulty: Record<Difficulty, number>;
-  coverage: CoverageEntry[];
-}
+export type { QuizInput, QuizItemInput, BlueprintInput } from './schemas/quiz.schema.js';
 
-export interface CoverageEntry {
-  chapterId: string;
-  sectionId?: string;
-  itemCount: number;
-}
+// Constants
+export {
+  DIFFICULTY_LEVELS,
+  DIFFICULTY_LABELS,
+  DIFFICULTY_DESCRIPTIONS,
+} from './constants/difficulty.js';
 
-export interface Citation {
-  id: string;
-  chunkId: string;
-  bookId: string;
-  pageRange?: string;
-  excerptPreview: string;
-  relevanceScore: number;
-}
-
-export type ItemType = 'mcq' | 'true_false' | 'short_answer' | 'matching' | 'fill_in';
-export type Difficulty = 'easy' | 'medium' | 'hard';
-export type BloomLevel = 'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create';
-export type ArtifactStatus = 'draft' | 'reviewed' | 'approved' | 'exported';
-
-// Agent Types
-export interface VerificationReport {
-  artifactId: string;
-  runId: string;
-  verdict: 'pass' | 'fail' | 'warning';
-  issues: VerificationIssue[];
-  timestamp: Date;
-}
-
-export interface VerificationIssue {
-  id: string;
-  type: 'unsupported_claim' | 'missing_citation' | 'citation_drift' | 'invalid_mcq';
-  severity: 'blocking' | 'warning';
-  message: string;
-  artifactPointer: string;
-  suggestion?: string;
-}
-
-export interface QAReport {
-  artifactId: string;
-  runId: string;
-  scores: QAScores;
-  issues: QAIssue[];
-  recommendations: string[];
-  timestamp: Date;
-}
-
-export interface QAScores {
-  grounding: number; // 0-100
-  mcqValidity: number; // 0-100
-  clarity?: number; // 0-100
-  coverage?: number; // 0-100
-  overall: number; // 0-100
-}
-
-export interface QAIssue {
-  id: string;
-  category: string;
-  severity: 'high' | 'medium' | 'low';
-  message: string;
-  artifactPointer: string;
-}
-
-// API Types
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: ApiError;
-}
-
-export interface ApiError {
-  code: string;
-  message: string;
-  details?: Record<string, unknown>;
-}
-
-// Utility Types
-export type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
-};
+export {
+  BLOOM_LEVELS,
+  BLOOM_LABELS,
+  BLOOM_DESCRIPTIONS,
+  BLOOM_HIERARCHY,
+} from './constants/bloom.js';
