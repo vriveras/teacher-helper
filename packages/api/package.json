@@ -1,0 +1,36 @@
+{
+  "name": "@teacher-helper/api",
+  "version": "0.1.0",
+  "description": "TeacherHelper API server",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@fastify/cors": "^9.0.0",
+    "@fastify/helmet": "^11.0.0",
+    "@prisma/client": "^5.10.0",
+    "@teacher-helper/shared": "*",
+    "fastify": "^4.26.0",
+    "ioredis": "^5.3.0",
+    "neo4j-driver": "^5.18.0",
+    "pino": "^8.19.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "prisma": "^5.10.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.3.0"
+  }
+}

@@ -1,0 +1,152 @@
+// Prisma schema for TeacherHelper
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      UserRole @default(TEACHER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects     Project[]
+  styleProfile StyleProfile?
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  TEACHER
+  COACH
+}
+
+// Book Knowledge Base
+model Book {
+  id            String   @id @default(cuid())
+  title         String
+  edition       String?
+  subject       String
+  gradeBand     String
+  language      String   @default("en")
+  licensePolicy Json
+  toc           Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  chunks Chunk[]
+
+  @@map("books")
+}
+
+model Chunk {
+  id        String   @id @default(cuid())
+  bookId    String
+  chapter   String?
+  section   String?
+  pageStart Int?
+  pageEnd   Int?
+  text      String
+  hash      String
+  createdAt DateTime @default(now())
+
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([bookId])
+  @@index([hash])
+  @@map("chunks")
+}
+
+// Projects and Artifacts
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizzes Quiz[]
+
+  @@index([userId])
+  @@map("projects")
+}
+
+model Quiz {
+  id        String         @id @default(cuid())
+  projectId String
+  title     String
+  items     Json
+  blueprint Json
+  citations Json
+  status    ArtifactStatus @default(DRAFT)
+  version   Int            @default(1)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  project    Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  agentRuns  AgentRun[]
+
+  @@index([projectId])
+  @@index([status])
+  @@map("quizzes")
+}
+
+enum ArtifactStatus {
+  DRAFT
+  REVIEWED
+  APPROVED
+  EXPORTED
+}
+
+// Agent Pipeline
+model AgentRun {
+  id                 String   @id @default(cuid())
+  quizId             String
+  verificationReport Json?
+  qaReport           Json?
+  modelsUsed         String[]
+  latencyMs          Int?
+  status             RunStatus @default(PENDING)
+  createdAt          DateTime  @default(now())
+  completedAt        DateTime?
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+  @@map("agent_runs")
+}
+
+enum RunStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+// Teacher Style
+model StyleProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  version      Int      @default(1)
+  toneParams   Json?
+  formatParams Json?
+  questionMix  Json?
+  rubricParams Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("style_profiles")
+}
