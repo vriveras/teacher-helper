@@ -7,8 +7,8 @@
 | # | Task | Agent | Dependencies | Status |
 |---|------|-------|--------------|--------|
 | 1 | Initialize Node.js/TypeScript project with package.json, tsconfig | dev-agent | none | **DONE** |
-| 2 | Set up project structure (src/, tests/, configs) | dev-agent | 1 | pending |
-| 3 | Configure OpenRouter client for AI gateway | dev-agent | 1 | pending |
+| 2 | Set up project structure (src/, tests/, configs) | dev-agent | 1 | **DONE** |
+| 3 | Configure OpenRouter client for AI gateway | dev-agent | 1 | **DONE** |
 
 ### Epic: KB-Ingestion (Book Upload → Chunk → Index)
 | # | Task | Agent | Dependencies | Status |
@@ -80,7 +80,7 @@
 - **Total Tasks:** 39
 - **dev-agent:** 31 tasks
 - **qa-agent:** 8 tasks
-- **Critical Path:** 1 → 2 → 4 → 5 → 6 → 7 → 8 → 9 → 13 → 15 → 21 → 28 → 29 → 34
+- **Critical Path:** 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 13 → 15 → 21 → 28 → 29 → 34
 
 ## Upcoming Phases
 - Phase 1: MVP - Lesson Plan + Item Bank

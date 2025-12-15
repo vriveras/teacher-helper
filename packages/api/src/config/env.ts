@@ -18,6 +18,15 @@ const envSchema = z.object({
   // Redis
   REDIS_URL: z.string().url().optional(),
 
+  // OpenRouter (AI Gateway)
+  OPENROUTER_API_KEY: z.string().min(1).optional(),
+  OPENROUTER_BASE_URL: z.string().url().default('https://openrouter.ai/api/v1'),
+  OPENROUTER_APP_NAME: z.string().optional(),
+  OPENROUTER_DEFAULT_MODEL: z.string().default('anthropic/claude-3.5-sonnet'),
+  OPENROUTER_TIMEOUT_MS: z.string().default('60000').transform(Number),
+  OPENROUTER_MAX_RETRIES: z.string().default('3').transform(Number),
+  OPENROUTER_TEST_MODE: z.string().optional().transform((v) => v === 'true'),
+
   // CORS
   CORS_ORIGIN: z.string().optional(),
 });
@@ -44,4 +53,13 @@ export function getEnv(): Env {
 
 export function resetEnvCache(): void {
   envCache = null;
+}
+
+/**
+ * Check if OpenRouter is configured and ready for use
+ * Returns true if API key is present or test mode is enabled
+ */
+export function isOpenRouterConfigured(): boolean {
+  const env = getEnv();
+  return Boolean(env.OPENROUTER_API_KEY) || Boolean(env.OPENROUTER_TEST_MODE);
 }
