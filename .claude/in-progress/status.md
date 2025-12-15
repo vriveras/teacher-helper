@@ -1,27 +1,29 @@
 # Current Status
 - **Phase**: Phase 0 - Hello World Vertical Slice
-- **Epic**: Project Setup
-- **Task**: Task #1 COMPLETED - Initialize Node.js/TypeScript project
-- **Assigned**: dev-agent
-- **Completed**: 2025-12-15
-
-## Task #1 Deliverables
-- Monorepo structure with npm workspaces
-- packages/api (Fastify + Prisma)
-- packages/web (Next.js + Tailwind)
-- packages/shared (TypeScript types)
-- Docker + docker-compose (PostgreSQL, Neo4j, Redis)
-- ESLint + Prettier
+- **Epic**: Project Setup / KB-Ingestion
+- **Task**: Awaiting next task assignment
+- **Last Completed**: Task #3 - Configure OpenRouter client for AI gateway (2025-12-15)
 
 ## Phase 0 Progress
 - **Total Tasks:** 39
-- **Completed:** 1
+- **Completed:** 3
 - **In Progress:** 0
-- **Pending:** 38
+- **Pending:** 36
 
-## Next Task
-- Task #2: Set up project structure (src/, tests/, configs)
-- OR Task #3: Configure OpenRouter client for AI gateway
+## Task #3 Summary (Completed)
+- OpenRouter service with OpenAI-compatible API
+- Environment configuration with Zod validation
+- Model routing (high-reasoning, fast, embeddings)
+- Retry with exponential backoff + jitter
+- Fallback model support
+- Test mode for development without API key
+- Telemetry tracking (tokens, latency, success/failure)
+- 12 unit tests, all passing
+- Documentation in packages/api/src/services/README.md
+
+## Next Tasks Ready
+- **Task #4**: Define Book and Chunk data models/schemas (depends on #2)
+- **Task #14**: Create DGA prompt templates (depends on #3 - NOW UNBLOCKED)
 
 ## Commands
 ```bash
@@ -34,4 +36,7 @@ npm run dev:web   # Web on :3000
 
 # Build
 npm run build
+
+# Test
+npm run test
 ```

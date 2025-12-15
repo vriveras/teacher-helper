@@ -26,6 +26,22 @@ export type {
 
 export type { ApiResponse, ApiError, DeepPartial } from './types/api.types.js';
 
+// OpenRouter Types
+export type {
+  OpenRouterConfig,
+  ModelConfig,
+  ChatMessage,
+  CompletionRequest,
+  CompletionChoice,
+  TokenUsage,
+  CompletionResponse,
+  OpenRouterErrorCode,
+  OpenRouterError,
+  TelemetryData,
+  ModelTaskType,
+  ModelRoutingConfig,
+} from './types/openrouter.types.js';
+
 // Schemas
 export {
   bookSchema,
