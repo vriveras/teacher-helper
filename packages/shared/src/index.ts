@@ -1,7 +1,25 @@
 // TeacherHelper Shared Package
 
 // Types
-export type { Book, TableOfContentsEntry, LicensePolicy, Chunk } from './types/book.types.js';
+export type {
+  Book,
+  Chunk,
+  TableOfContentsEntry,
+  LicensePolicy,
+  BookStatus,
+  BookFileMetadata,
+  CreateBookInput,
+  UpdateBookInput,
+  ChunkLocation,
+  CreateChunkInput,
+  ChunkWithBook,
+  ChunkSearchResult,
+  ChunkingConfig,
+  Embedding,
+  BookIngestionProgress,
+} from './types/book.types.js';
+
+export { DEFAULT_CHUNKING_CONFIG } from './types/book.types.js';
 
 export type {
   Quiz,
@@ -32,9 +50,26 @@ export {
   chunkSchema,
   licensePolicySchema,
   tocEntrySchema,
+  bookStatusSchema,
+  bookFileMetadataSchema,
+  createBookInputSchema,
+  updateBookInputSchema,
+  chunkLocationSchema,
+  createChunkInputSchema,
+  validateTokenCount,
+  chunkingConfigSchema,
+  chunkSearchResultSchema,
+  embeddingSchema,
+  bookIngestionProgressSchema,
 } from './schemas/book.schema.js';
 
-export type { BookInput, ChunkInput } from './schemas/book.schema.js';
+export type {
+  BookInput,
+  ChunkInput,
+  CreateChunkInput as ChunkCreateInput,
+  ChunkingConfig as ChunkingConfigInput,
+  BookStatus as BookStatusType,
+} from './schemas/book.schema.js';
 
 export {
   quizSchema,
