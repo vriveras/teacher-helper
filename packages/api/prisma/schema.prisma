@@ -1,12 +1,14 @@
 // Prisma schema for TeacherHelper
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
 }
 
 // User Management
@@ -20,6 +22,7 @@ model User {
 
   projects     Project[]
   styleProfile StyleProfile?
+  books        Book[]
 
   @@map("users")
 }
@@ -30,40 +33,108 @@ enum UserRole {
   COACH
 }
 
+// Book Processing Status
+enum BookStatus {
+  PENDING // Uploaded, waiting for processing
+  PROCESSING // Currently being processed (parsing, chunking)
+  CHUNKED // Text extraction and chunking complete
+  INDEXING // Generating embeddings and indexing
+  READY // Fully processed and searchable
+  ERROR // Processing failed
+}
+
 // Book Knowledge Base
 model Book {
-  id            String   @id @default(cuid())
+  id            String  @id @default(cuid())
   title         String
   edition       String?
   subject       String
   gradeBand     String
-  language      String   @default("en")
+  language      String  @default("en")
   licensePolicy Json
   toc           Json?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  // File metadata for uploaded books
+  fileName   String?
+  fileSize   Int? // Size in bytes
+  mimeType   String? // e.g., "application/pdf"
+  storageKey String? // S3 key or local file path
+
+  // Processing metadata
+  status       BookStatus @default(PENDING)
+  totalPages   Int?
+  processedAt  DateTime?
+  errorMessage String?
+
+  // Ownership (optional - for user-uploaded books)
+  uploadedById String?
+  uploadedBy   User?   @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   chunks Chunk[]
 
+  @@index([status])
+  @@index([subject])
+  @@index([gradeBand])
+  @@index([uploadedById])
   @@map("books")
 }
 
 model Chunk {
-  id        String   @id @default(cuid())
-  bookId    String
+  id     String @id @default(cuid())
+  bookId String
+
+  // Location metadata
   chapter   String?
   section   String?
   pageStart Int?
   pageEnd   Int?
-  text      String
-  hash      String
+
+  // Content
+  text String
+
+  // Token management for 300-800 token chunks
+  tokenCount Int // Number of tokens in this chunk
+
+  // Ordering within book
+  sequence Int // Sequential order within the book
+
+  // Deduplication and caching
+  hash String // SHA-256 hash of text content
+
+  // Vector embedding (stored as pgvector for similarity search)
+  // Note: Vector storage handled via raw SQL or separate embedding table
+  // due to Prisma limitations with pgvector
+  embeddingId String? @unique
+
+  // Neo4j reference for graph relationships
+  neo4jNodeId String? @unique
+
   createdAt DateTime @default(now())
 
-  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  book      Book       @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  embedding Embedding? @relation(fields: [embeddingId], references: [id])
 
   @@index([bookId])
   @@index([hash])
+  @@index([bookId, sequence])
+  @@index([chapter])
+  @@index([section])
   @@map("chunks")
+}
+
+// Separate table for vector embeddings (pgvector)
+model Embedding {
+  id        String                       @id @default(cuid())
+  vector    Unsupported("vector(1536)")? // OpenAI ada-002 dimension
+  model     String // Model used to generate embedding
+  createdAt DateTime                     @default(now())
+
+  chunk Chunk?
+
+  @@map("embeddings")
 }
 
 // Projects and Artifacts
@@ -75,7 +146,7 @@ model Project {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   quizzes Quiz[]
 
   @@index([userId])
@@ -94,8 +165,8 @@ model Quiz {
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
 
-  project    Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  agentRuns  AgentRun[]
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  agentRuns AgentRun[]
 
   @@index([projectId])
   @@index([status])
@@ -111,7 +182,7 @@ enum ArtifactStatus {
 
 // Agent Pipeline
 model AgentRun {
-  id                 String   @id @default(cuid())
+  id                 String    @id @default(cuid())
   quizId             String
   verificationReport Json?
   qaReport           Json?
