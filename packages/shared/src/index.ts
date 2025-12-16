@@ -44,6 +44,21 @@ export type {
 
 export type { ApiResponse, ApiError, DeepPartial } from './types/api.types.js';
 
+// PDF Parser Types
+export type {
+  PDFMetadata,
+  PDFPage,
+  PDFHeading,
+  PDFSection,
+  ParsedPDF,
+  PDFParserOptions,
+  PDFParseResult,
+  PDFParseError,
+  PDFErrorCode,
+} from './types/pdf.types.js';
+
+export { DEFAULT_PDF_PARSER_OPTIONS } from './types/pdf.types.js';
+
 // Schemas
 export {
   bookSchema,
