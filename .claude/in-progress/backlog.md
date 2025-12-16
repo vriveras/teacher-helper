@@ -14,7 +14,7 @@
 | # | Task | Agent | Dependencies | Status |
 |---|------|-------|--------------|--------|
 | 4 | Define Book and Chunk data models/schemas | dev-agent | 2 | **DONE** |
-| 5 | Implement PDF parser for text extraction | dev-agent | 4 | pending |
+| 5 | Implement PDF parser for text extraction | dev-agent | 4 | **DONE** |
 | 6 | Implement structure-aware chunking (300-800 tokens) | dev-agent | 5 | pending |
 | 7 | Create chunk store with metadata (book_id, chapter, section, page) | dev-agent | 6 | pending |
 | 8 | Implement vector embeddings generation | dev-agent | 3, 7 | pending |

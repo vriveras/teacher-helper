@@ -1,8 +1,8 @@
 # Current Status
 - **Phase**: Phase 0 - Hello World Vertical Slice
 - **Epic**: KB-Ingestion
-- **Last Completed**: Task #4 - Define Book and Chunk data models/schemas
-- **Completed**: 2025-12-15
+- **Last Completed**: Task #5 - Implement PDF parser for text extraction
+- **Completed**: 2025-12-16
 
 ## Completed Tasks Summary
 
@@ -17,18 +17,18 @@
 | Task | PR | Status |
 |------|-----|--------|
 | #4 Book/Chunk models | PR #3 | ✓ |
-| #5 PDF parser | - | pending |
+| #5 PDF parser | PR #4 | ✓ |
 | #6 Structure-aware chunking | - | pending |
 
 ## Phase 0 Progress
 - **Total Tasks:** 39
-- **Completed:** 4
+- **Completed:** 5
 - **In Progress:** 0
-- **Pending:** 35
+- **Pending:** 34
 
 ## Next Tasks
-- Task #5: Implement PDF parser for text extraction
-- Task #12: Define Quiz artifact schema (depends on #4)
+- Task #6: Implement structure-aware chunking (300-800 tokens)
+- Task #12: Define Quiz artifact schema (depends on #4 ✓)
 
 ## Infrastructure
 - PostgreSQL with pgvector: localhost:5432
