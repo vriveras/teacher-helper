@@ -59,6 +59,20 @@ export type {
 
 export { DEFAULT_PDF_PARSER_OPTIONS } from './types/pdf.types.js';
 
+// Chunking Types
+export type {
+  ChunkingInput,
+  ChunkMetadata,
+  ChunkData,
+  ChunkingStats,
+  ChunkingResult,
+  ChunkingError,
+  ChunkingErrorCode,
+  SplitOptions,
+  TextSegment,
+  ChunkDataToInput,
+} from './types/chunking.types.js';
+
 // Schemas
 export {
   bookSchema,
